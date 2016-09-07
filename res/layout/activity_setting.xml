@@ -48,7 +48,16 @@
     </RelativeLayout> -->
 
     <com.itheima.mobilesafe74.view.SettingItemView
+        xmlns:mobilesafe="http://schemas.android.com/apk/res/com.itheima.mobilesafe74"
+        android:id="@+id/siv_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        mobilesafe:destitle="自动更新设置"
+        mobilesafe:desoff="自动更新已关闭"
+        mobilesafe:deson="自动更新已开启" /> 
+	<!-- SettingItemView需要在构建布局的时候指定title和des字符串的内容 -->
+	<!-- 自定义属性 -->
+	<com.itheima.mobilesafe74.view.SettingItemView
         android:layout_width="match_parent"
         android:layout_height="wrap_content" /> 
-
 </LinearLayout>

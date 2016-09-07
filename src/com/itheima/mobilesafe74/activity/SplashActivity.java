@@ -30,6 +30,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.itheima.mobilesafe74.R;
+import com.itheima.mobilesafe74.utils.ConstantValue;
+import com.itheima.mobilesafe74.utils.SpUtil;
 import com.itheima.mobilesafe74.utils.StreamUtil;
 import com.itheima.mobilesafe74.utils.ToastUtil;
 import com.lidroid.xutils.HttpUtils;
@@ -73,6 +75,8 @@ public class SplashActivity extends Activity {
 	private int mLocalVersionCode;
 	
 	private String mDownloadUrl;
+	
+	private RelativeLayout rl_root;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -103,7 +107,6 @@ public class SplashActivity extends Activity {
 		};
 	};
 
-	private RelativeLayout rl_root;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -285,7 +288,16 @@ public class SplashActivity extends Activity {
 		/*
 		 * json中包含的内容： 更新版本的版本名称 新版本的描述 服务器的版本号 新版本apk的下载地址
 		 */
-		checkedVersion();
+		if (SpUtil.getBoolean(this, ConstantValue.OPEN_UPDATE, false)) {
+			checkedVersion();
+		}else{
+			//直接进入应用程序主界面
+//			enterHome();
+			//消息机制
+//			mHandler.sendMessageDelayed(msg, 4000);
+			//在发送消息4秒后，去处理ENTER_HOME状态吗指定的消息
+			mHandler.sendEmptyMessageDelayed(ENTER_HOME, 4000);
+		}
 	}
 
 	/**

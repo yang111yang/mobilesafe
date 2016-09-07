@@ -10,11 +10,15 @@ import android.widget.TextView;
 import com.itheima.mobilesafe74.R;
 
 /**
- * 
+ * 自定义控件SettingItemView，把设置中心的一个条目封装到SettingItemView中
  * @author 刘建阳
  * @date 2016-9-7 下午4:27:42
  */
 public class SettingItemView extends RelativeLayout {
+
+	private CheckBox cb_box;
+	private TextView tv_des;
+
 
 	/*
 	 * 把前两个构造方法的super换成this,并将其里面的参数和下一个保持一致，无论调哪一个构造方法，最终都会走第三个构造方法
@@ -40,8 +44,40 @@ public class SettingItemView extends RelativeLayout {
 
 		// 关联控件
 		TextView tv_title = (TextView) findViewById(R.id.tv_title);
-		TextView tv_des = (TextView) findViewById(R.id.tv_des);
-		CheckBox cb_box = (CheckBox) findViewById(R.id.cb_box);
+		tv_des = (TextView) findViewById(R.id.tv_des);
+		cb_box = (CheckBox) findViewById(R.id.cb_box);
+		
+		//获取自定义及原生属性的操作，写在此处，AttributeSet attrs对象中获取
+		initAttrs(attrs);
 	}
 
+	
+	/**
+	 * 返回属性集合中自定义属性的属性值
+	 * @param attrs	构造方法中维护好的属性集合
+	 */
+	private void initAttrs(AttributeSet attrs) {
+		
+	}
+
+	/**
+	 * 判断是否开启的方法
+	 * @return 返回当前SettingItemView是否选中状态	true开启(checkBox返回true)	false关闭(checkBox返回false)
+	 */
+	public boolean isChecked(){
+		//由checkbox的选中结果来决定当前条目是否开启
+		return cb_box.isChecked();
+	}
+	
+	public void setCheck(boolean isChecked){
+		//当前条目在选择的过程中，cb_box选中状态也随着(isChecked)变化
+		cb_box.setChecked(isChecked);
+		if (isChecked) {
+			tv_des.setText("自动更新已开启");
+		}else{
+			tv_des.setText("自动更新已关闭");
+			
+		}
+	}
+	
 }
