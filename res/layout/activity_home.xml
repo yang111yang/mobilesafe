@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        style="@style/TitleStytle"
+        android:text="功能列表" />
+
+    <!-- android:ellipsize="end" 添加省略点的位置 -->
+    <!--
+                         跑马灯
+     	android:ellipsize="marquee"
+        android:focusable="true"	当前控件获取焦点
+        android:focusableInTouchMode="true"	触摸时也要获取焦点
+        android:marqueeRepeatLimit="marquee_forever"	一直滚动
+    -->
+    <!-- 自定义控件达到滚动效果(其实就是让TextView一直获取焦点) -->
+
+    <com.itheima.mobilesafe74.view.FocusTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:padding="5dp"
+        android:singleLine="true"
+        android:text="我爱你！亲爱的姑娘！见到你并不慌张！爱爱爱爱爱爱爱爱！"
+        android:textColor="#000" />
+    
+	<!-- 
+	android:numColumns="3" 指定列的数量
+	android:verticalSpacing="10dp" 指定内部条目竖直方向上的间距为10dp
+	 -->
+    <GridView
+        android:id="@+id/gv_home"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="3"
+        android:verticalSpacing="10dp" >
+    </GridView>
+
+</LinearLayout>

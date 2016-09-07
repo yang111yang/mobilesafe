@@ -8,7 +8,7 @@ import java.io.InputStream;
  * @author 刘建阳
  * @date 2016-9-6 下午5:08:47
  */
-public class StreamUtils {
+public class StreamUtil {
 
 	/**
 	 * 流转换成字符串
