@@ -38,7 +38,11 @@ import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
-
+/**
+ * Splash界面
+ * @author 刘建阳
+ * @date 2016-9-8 下午3:55:06
+ */
 public class SplashActivity extends Activity {
 
 	protected static final String TAG = "SplashActivity";

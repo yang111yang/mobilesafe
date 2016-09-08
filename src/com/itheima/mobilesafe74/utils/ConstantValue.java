@@ -19,7 +19,14 @@ public class ConstantValue {
 	public static final String MOBILE_SAFE_PSD = "mobile_safe_psd";
 	
 	/**
+	 * 是否设置完成的key
+	 */
+	public static final String SETUP_OVER = "setup_over";
+	
+	/**
 	 * mobilesafe自定义属性的名空间
 	 */
 	public static final String NAMESPACE = "http://schemas.android.com/apk/res/com.itheima.mobilesafe74";
+
+
 }

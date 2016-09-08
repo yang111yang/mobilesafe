@@ -150,7 +150,9 @@ public class HomeActivity extends Activity {
 					String psd = SpUtil.getString(getApplicationContext(), ConstantValue.MOBILE_SAFE_PSD, "");
 					if (psd.equals(Md5Util.encoder(confrimPsd))) {
 						//进入手机防盗模块的界面,开启一个新的activity
-						Intent intent = new Intent(getApplicationContext(),TestActivity.class);
+//						Intent intent = new Intent(getApplicationContext(),TestActivity.class);
+						Intent intent = new Intent(getApplicationContext(),SetupOverActivity.class);
+						
 						startActivity(intent);
 						//隐藏对话框
 						dialog.dismiss();
@@ -207,7 +209,7 @@ public class HomeActivity extends Activity {
 				if (!TextUtils.isEmpty(psd)&&!TextUtils.isEmpty(confrimPsd)) {
 					if (psd.equals(confrimPsd)) {
 						//进入手机防盗模块的界面,开启一个新的activity
-						Intent intent = new Intent(getApplicationContext(),TestActivity.class);
+						Intent intent = new Intent(getApplicationContext(),SetupOverActivity.class);
 						startActivity(intent);
 						//隐藏对话框
 						dialog.dismiss();
