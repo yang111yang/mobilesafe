@@ -57,7 +57,4 @@
         mobilesafe:deson="自动更新已开启" /> 
 	<!-- SettingItemView需要在构建布局的时候指定title和des字符串的内容 -->
 	<!-- 自定义属性 -->
-	<com.itheima.mobilesafe74.view.SettingItemView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" /> 
 </LinearLayout>

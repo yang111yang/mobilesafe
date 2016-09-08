@@ -11,5 +11,15 @@ public class ConstantValue {
 	 * 是否开启更新的key
 	 */
 	public static final String OPEN_UPDATE = "open_update";
+	
 
+	/**
+	 * 是否设置密码的key
+	 */
+	public static final String MOBILE_SAFE_PSD = "mobile_safe_psd";
+	
+	/**
+	 * mobilesafe自定义属性的名空间
+	 */
+	public static final String NAMESPACE = "http://schemas.android.com/apk/res/com.itheima.mobilesafe74";
 }

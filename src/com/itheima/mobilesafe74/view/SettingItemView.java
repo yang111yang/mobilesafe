@@ -2,12 +2,14 @@ package com.itheima.mobilesafe74.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.itheima.mobilesafe74.R;
+import com.itheima.mobilesafe74.utils.ConstantValue;
 
 /**
  * 自定义控件SettingItemView，把设置中心的一个条目封装到SettingItemView中
@@ -16,8 +18,14 @@ import com.itheima.mobilesafe74.R;
  */
 public class SettingItemView extends RelativeLayout {
 
+	
+	private static final String tag = "SettingItemView";
 	private CheckBox cb_box;
 	private TextView tv_des;
+	private TextView tv_title;
+	private String mDestitle;
+	private String mDesoff;
+	private String mDeson;
 
 
 	/*
@@ -42,13 +50,15 @@ public class SettingItemView extends RelativeLayout {
 		 * this.addView(view);
 		 */
 
-		// 关联控件
-		TextView tv_title = (TextView) findViewById(R.id.tv_title);
+		tv_title = (TextView) findViewById(R.id.tv_title);
 		tv_des = (TextView) findViewById(R.id.tv_des);
 		cb_box = (CheckBox) findViewById(R.id.cb_box);
 		
 		//获取自定义及原生属性的操作，写在此处，AttributeSet attrs对象中获取
 		initAttrs(attrs);
+		
+		tv_title.setText(mDestitle);
+		
 	}
 
 	
@@ -57,6 +67,21 @@ public class SettingItemView extends RelativeLayout {
 	 * @param attrs	构造方法中维护好的属性集合
 	 */
 	private void initAttrs(AttributeSet attrs) {
+		/*Log.i(tag, "AttributeCount:"+attrs.getAttributeCount());
+		//获取属性名称和属性值
+		for (int i = 0; i < attrs.getAttributeCount(); i++) {
+			Log.i(tag, "AttributeName:"+attrs.getAttributeName(i));
+			Log.i(tag, "AttributeValue:"+attrs.getAttributeValue(i));
+			Log.i(tag, "================");
+		}*/
+		
+		//通过名空间和属性名称获取SettingItemView的属性值
+		mDestitle = attrs.getAttributeValue(ConstantValue.NAMESPACE, "destitle");
+		mDesoff = attrs.getAttributeValue(ConstantValue.NAMESPACE, "desoff");
+		mDeson = attrs.getAttributeValue(ConstantValue.NAMESPACE, "deson");
+		Log.i(tag, mDestitle);
+		Log.i(tag, mDesoff);
+		Log.i(tag, mDeson);
 		
 	}
 
@@ -73,9 +98,9 @@ public class SettingItemView extends RelativeLayout {
 		//当前条目在选择的过程中，cb_box选中状态也随着(isChecked)变化
 		cb_box.setChecked(isChecked);
 		if (isChecked) {
-			tv_des.setText("自动更新已开启");
+			tv_des.setText(mDeson);
 		}else{
-			tv_des.setText("自动更新已关闭");
+			tv_des.setText(mDesoff);
 			
 		}
 	}

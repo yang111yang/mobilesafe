@@ -12,7 +12,6 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="自动更新设置"
             android:textColor="#000"
             android:textSize="18sp" />
 
@@ -21,7 +20,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_title"
-            android:text="自动更新已关闭"
             android:textColor="#000"
             android:textSize="18sp" />
 
