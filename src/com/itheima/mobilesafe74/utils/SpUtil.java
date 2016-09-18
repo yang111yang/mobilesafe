@@ -67,6 +67,18 @@ public class SpUtil {
 		
 	}
 	
+	/**
+	 * 从sp中移除指定节点
+	 * @param ctx 上下文环境
+	 * @param key sim卡的序列卡号
+	 */
+	public static void remove(Context ctx, String key) {
+		if (sp==null) {
+			sp = ctx.getSharedPreferences("config", Context.MODE_PRIVATE);
+		}
+		sp.edit().remove(key).commit();
+	}
+	
 	
 	
 	

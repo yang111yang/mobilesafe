@@ -4,7 +4,7 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="lib" path="E:/Software/Tools/adt-bundle-windows-x86_64-20140702/sdk/platforms/android-24/optional/org.apache.http.legacy.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
+	<classpathentry kind="lib" path="E:/android sdk/adt-bundle-windows-x86_64-20140702/sdk/platforms/android-24/optional/org.apache.http.legacy.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

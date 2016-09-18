@@ -24,9 +24,15 @@ public class ConstantValue {
 	public static final String SETUP_OVER = "setup_over";
 	
 	/**
+	 * sim卡序列号绑定的key
+	 */
+	public static final String SIM_NUMBER = "sim_number";
+	
+	/**
 	 * mobilesafe自定义属性的名空间
 	 */
 	public static final String NAMESPACE = "http://schemas.android.com/apk/res/com.itheima.mobilesafe74";
+
 
 
 }

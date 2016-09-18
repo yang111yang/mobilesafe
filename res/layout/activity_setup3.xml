@@ -6,30 +6,39 @@
 
     <TextView
         style="@style/TitleStytle"
-        android:text="2手机卡绑定" />
+        android:text="3设置安全号码" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:text="通过绑定sim卡：\n下次重启手机发现sim卡变化发送报警短信"
+        android:text="sim卡变更后：\n报警短信会发送给安全号码"
         android:textColor="#000"
         android:textSize="18sp" />
-    
-    <com.itheima.mobilesafe74.view.SettingItemView
-        xmlns:mobilesafe="http://schemas.android.com/apk/res/com.itheima.mobilesafe74"
-        android:id="@+id/siv_sim_bound"
+
+    <EditText
+        android:id="@+id/et_phone_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        mobilesafe:destitle="点击绑定sim卡"
-        mobilesafe:desoff="sim未绑定"
-        mobilesafe:deson="sim已绑定" /> 
+        android:hint="请输入电话号码"
+        android:inputType="phone" />
+
+    <Button
+        android:id="@+id/btn_select_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_number_btn_bg"
+        android:text="请选择联系人" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal" >
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/presence_invisible" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -40,11 +49,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:drawable/presence_online" />
-        
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/presence_invisible" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -55,7 +59,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-        
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,6 +67,7 @@
             android:background="@drawable/bind" />
 
         <Button style="@style/PreBtn" />
+
         <Button style="@style/NextBtn" />
     </RelativeLayout>
 

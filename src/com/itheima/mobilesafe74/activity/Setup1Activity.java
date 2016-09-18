@@ -16,7 +16,11 @@ public class Setup1Activity extends Activity {
 		
 	}
 	
+	//点击按钮，跳转到下一页
 	public void nextPage(View v) {
-		new Intent(this,Setup2Activity.class);
+		Intent intent = new Intent(this,Setup2Activity.class);
+		startActivity(intent);
+		//销毁当前页面
+		finish();
 	}
 }
