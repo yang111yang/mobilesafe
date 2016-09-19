@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,12 +26,18 @@ import com.itheima.mobilesafe74.R;
 public class ContactListActivity extends Activity {
 
 	protected static final String tag = "ContactListActivity";
+	
 	private ListView lv_contact;
+	
 	private List<HashMap<String, String>> contactList = new ArrayList<HashMap<String, String>>();
+	
+	private MyAdapter mMyAdapter;
+	
 	private Handler mHandler = new Handler(){
+
 		public void handleMessage(android.os.Message msg) {
-			//8.填充数据适配器
-			lv_contact.setAdapter(new MyAdapter());
+			mMyAdapter = new MyAdapter();
+			lv_contact.setAdapter(mMyAdapter);
 		};
 	};
 
@@ -100,6 +109,27 @@ public class ContactListActivity extends Activity {
 
 	private void initUI() {
 		lv_contact = (ListView) findViewById(R.id.lv_contact);
+		lv_contact.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				//1.获取选中条目的索引指向集合中的对象
+				if (mMyAdapter!=null) {
+					HashMap<String, String> hashMap = mMyAdapter.getItem(position);
+					//2.获取当前条目指向集合中对应的电话号码
+					String phone = hashMap.get("phone");
+					//3.将此电话号码回传给导航界面的第三个界面
+					Intent intent = new Intent(getApplicationContext(),Setup3Activity.class);
+					intent.putExtra("phone", phone);
+					setResult(0, intent);
+					//4.销毁该Activity
+					finish();
+				}
+			}
+			
+			
+		});
 	}
 
 	

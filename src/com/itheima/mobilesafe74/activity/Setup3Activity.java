@@ -41,6 +41,7 @@ public class Setup3Activity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		//返回到当前界面当中要接收的结果的方法
+		String phone = data.getStringExtra("phone");
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
