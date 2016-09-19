@@ -1,14 +1,22 @@
 package com.itheima.mobilesafe74.activity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.itheima.mobilesafe74.R;
 
@@ -16,6 +24,13 @@ public class ContactListActivity extends Activity {
 
 	protected static final String tag = "ContactListActivity";
 	private ListView lv_contact;
+	private List<HashMap<String, String>> contactList = new ArrayList<HashMap<String, String>>();
+	private Handler mHandler = new Handler(){
+		public void handleMessage(android.os.Message msg) {
+			//8.填充数据适配器
+			lv_contact.setAdapter(new MyAdapter());
+		};
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +54,10 @@ public class ContactListActivity extends Activity {
 				Cursor cursor = contentResolver.query(Uri
 						.parse("content://com.android.contacts/raw_contacts"),
 						new String[] { "contact_id" }, null, null, null);
+				
+				//清空集合中的数据
+				contactList.clear();
+				
 				// 3.循环游标，直到没有数据位置
 				while (cursor.moveToNext()) {
 					String id = cursor.getString(0);
@@ -53,14 +72,27 @@ public class ContactListActivity extends Activity {
 					while (indexCursor.moveToNext()) {
 						String data = indexCursor.getString(0);
 						String type = indexCursor.getString(1);
-//						if (type.equals(other)) {
-//							
-//						}
+						//6.区分数据去给hashMap填充数据
+						if (type.equals("vnd.android.cursor.item/phone_v2")) {
+							//数据的非空检查
+							if (!TextUtils.isEmpty(data)) {
+								hashMap.put("phone", data);
+							}
+						}else if (type.equals("vnd.android.cursor.item/name")) {
+							if (!TextUtils.isEmpty(data)) {
+								hashMap.put("name", data);
+							}	
+						}
 					}
 					indexCursor.close();	
+					//把hashMap存储到集合中
+					contactList.add(hashMap);
+					
 				}
 				// 关闭游标
 				cursor.close();
+				//7.消息机制
+				mHandler.sendEmptyMessage(0);
 			};
 		}.start();
 
@@ -70,4 +102,37 @@ public class ContactListActivity extends Activity {
 		lv_contact = (ListView) findViewById(R.id.lv_contact);
 	}
 
+	
+	//ListView的适配器
+	class MyAdapter extends BaseAdapter{
+
+		@Override
+		public int getCount() {
+			return contactList.size();
+		}
+
+		@Override
+		public HashMap<String, String> getItem(int position) {
+			return contactList.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View view = View.inflate(getApplicationContext(), R.layout.list_contact_item, null);
+			TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
+			TextView tv_phone = (TextView) view.findViewById(R.id.tv_phone);
+			
+			tv_name.setText(contactList.get(position).get("name"));
+			tv_phone.setText(contactList.get(position).get("phone"));
+			
+			return view;
+		}
+		
+	}
+	
 }
