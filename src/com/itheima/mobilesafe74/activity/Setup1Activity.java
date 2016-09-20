@@ -22,5 +22,8 @@ public class Setup1Activity extends Activity {
 		startActivity(intent);
 		//销毁当前页面
 		finish();
+		
+		//开启屏移动画
+		overridePendingTransition(R.anim.next_in_anim, R.anim.next_out_anim);
 	}
 }
