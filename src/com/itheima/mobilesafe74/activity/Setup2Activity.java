@@ -1,6 +1,5 @@
 package com.itheima.mobilesafe74.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +14,7 @@ import com.itheima.mobilesafe74.utils.ConstantValue;
 import com.itheima.mobilesafe74.utils.SpUtil;
 import com.itheima.mobilesafe74.view.SettingItemView;
 
-public class Setup2Activity extends Activity {
+public class Setup2Activity extends BaseSetupActivity {
 
 	private SettingItemView siv_sim_bound;
 
@@ -63,17 +62,8 @@ public class Setup2Activity extends Activity {
 		});
 	}
 
-	// 点击按钮，跳转到上一页
-	public void prePage(View view) {
-		Intent intent = new Intent(this, Setup1Activity.class);
-		startActivity(intent);
-		finish();
-		// 开启屏移动画
-		overridePendingTransition(R.anim.pre_in_anim, R.anim.pre_out_anim);
-	}
-
-	// 点击按钮，跳转到下一页
-	public void nextPage(View view) {
+	@Override
+	public void showNextPage() {
 		String sim_number = SpUtil.getString(getApplicationContext(),
 				ConstantValue.SIM_NUMBER, "");
 		if (!TextUtils.isEmpty(sim_number)) {
@@ -86,5 +76,14 @@ public class Setup2Activity extends Activity {
 		} else {
 			Toast.makeText(this, "请绑定sim卡", Toast.LENGTH_SHORT).show();
 		}
+	}
+
+	@Override
+	public void showPrePage() {
+		Intent intent = new Intent(this, Setup1Activity.class);
+		startActivity(intent);
+		finish();
+		// 开启屏移动画
+		overridePendingTransition(R.anim.pre_in_anim, R.anim.pre_out_anim);
 	}
 }

@@ -1,6 +1,5 @@
 package com.itheima.mobilesafe74.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,7 +13,7 @@ import com.itheima.mobilesafe74.R;
 import com.itheima.mobilesafe74.utils.ConstantValue;
 import com.itheima.mobilesafe74.utils.SpUtil;
 
-public class Setup3Activity extends Activity {
+public class Setup3Activity extends BaseSetupActivity {
 
 	private EditText et_phone_number;
 	private Button btn_select_number;
@@ -62,17 +61,8 @@ public class Setup3Activity extends Activity {
 		}
 	}
 
-	// 点击按钮，跳转到上一页
-	public void prePage(View view) {
-		Intent intent = new Intent(this, Setup2Activity.class);
-		startActivity(intent);
-		finish();
-		// 开启屏移动画
-		overridePendingTransition(R.anim.pre_in_anim, R.anim.pre_out_anim);
-	}
-
-	// 点击按钮，跳转到下一页
-	public void nextPage(View view) {
+	@Override
+	public void showNextPage() {
 		String phone = et_phone_number.getText().toString().trim();
 		// 在sp中存储了相关联系人以后才可以跳转到下一页
 		// String contact_phone = SpUtil.getString(getApplicationContext(),
@@ -91,5 +81,14 @@ public class Setup3Activity extends Activity {
 			Toast.makeText(getApplicationContext(), "请输入电话号码",
 					Toast.LENGTH_SHORT).show();
 		}
+	}
+
+	@Override
+	public void showPrePage() {
+		Intent intent = new Intent(this, Setup2Activity.class);
+		startActivity(intent);
+		finish();
+		// 开启屏移动画
+		overridePendingTransition(R.anim.pre_in_anim, R.anim.pre_out_anim);
 	}
 }

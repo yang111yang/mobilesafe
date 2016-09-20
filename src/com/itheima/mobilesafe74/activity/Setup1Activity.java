@@ -1,13 +1,11 @@
 package com.itheima.mobilesafe74.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import com.itheima.mobilesafe74.R;
 
-public class Setup1Activity extends Activity {
+public class Setup1Activity extends BaseSetupActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -15,15 +13,21 @@ public class Setup1Activity extends Activity {
 		setContentView(R.layout.activity_setup1);
 		
 	}
-	
-	//点击按钮，跳转到下一页
-	public void nextPage(View v) {
+
+	@Override
+	public void showNextPage() {
 		Intent intent = new Intent(this,Setup2Activity.class);
 		startActivity(intent);
 		//销毁当前页面
 		finish();
-		
 		//开启屏移动画
 		overridePendingTransition(R.anim.next_in_anim, R.anim.next_out_anim);
+		
 	}
+
+	@Override
+	public void showPrePage() {
+		
+	}
+	
 }
