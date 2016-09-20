@@ -21,6 +21,9 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<uses-permission android:name="android.permission.READ_CONTACTS"/>
+	<!-- 监听开关机的权限 -->
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+	<uses-permission android:name="android.permission.SEND_SMS"/>
     
 
     <application
@@ -40,12 +43,18 @@
         <activity android:name="com.itheima.mobilesafe74.activity.HomeActivity" />
         <activity android:name="com.itheima.mobilesafe74.activity.SettingActivity" />
         <activity android:name="com.itheima.mobilesafe74.activity.TestActivity" />
-        <activity android:name="com.itheima.mobilesafe74.activity.SetupOverActivity" />
+        <activity android:name="com.itheima.mobilesafe74.activity.MobileSafeActivity" />
         <activity android:name="com.itheima.mobilesafe74.activity.Setup1Activity" />
         <activity android:name="com.itheima.mobilesafe74.activity.Setup2Activity" />
         <activity android:name="com.itheima.mobilesafe74.activity.Setup3Activity" />
         <activity android:name="com.itheima.mobilesafe74.activity.Setup4Activity" />
         <activity android:name="com.itheima.mobilesafe74.activity.ContactListActivity" />
+        
+        <receiver android:name="com.itheima.mobilesafe74.receiver.BootReceiver">
+            <intent-filter >
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

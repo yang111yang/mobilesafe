@@ -61,7 +61,7 @@ public class Setup4Activity extends BaseSetupActivity {
 		boolean open_security = SpUtil.getBoolean(getApplicationContext(),
 				ConstantValue.OPEN_SECURITY, false);
 		if (open_security) {
-			Intent intent = new Intent(this, SetupOverActivity.class);
+			Intent intent = new Intent(this, MobileSafeActivity.class);
 			startActivity(intent);
 
 			// 设置完成的标识存入Sp中
