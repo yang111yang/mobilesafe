@@ -1,8 +1,10 @@
 package com.itheima.mobilesafe74.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -63,6 +65,11 @@ public class QueryAddressActivity extends Activity {
 					//interpolator插补器，数字函数
 					Animation shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
 					et_phone.startAnimation(shake);
+					
+					//手机震动效果（vibrator震动）
+					Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+					//震动的毫秒值
+					vibrator.vibrate(2000);
 				}
 			}
 		});

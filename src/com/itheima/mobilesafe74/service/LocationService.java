@@ -54,7 +54,7 @@ public class LocationService extends Service {
 			double latitude = location.getLatitude();//纬度
 			//4.发送短信(添加权限)
 			SmsManager sm = SmsManager.getDefault();
-			sm.sendTextMessage("5556", null, "longitude = "+longitude+","+"latitude = "+latitude, null, null);
+			sm.sendTextMessage("18200366709", null, "longitude = "+longitude+","+"latitude = "+latitude, null, null);
 		}
 		
 		@Override
