@@ -1,8 +1,5 @@
 package com.itheima.mobilesafe74.service;
 
-import com.itheima.mobilesafe74.utils.ConstantValue;
-import com.itheima.mobilesafe74.utils.SpUtil;
-
 import android.app.Service;
 import android.content.Intent;
 import android.location.Criteria;
@@ -16,12 +13,8 @@ import android.telephony.SmsManager;
 public class LocationService extends Service {
 
 	@Override
-	public IBinder onBind(Intent intent) {
-		return null;
-	}
-
-	@Override
 	public void onCreate() {
+		super.onCreate();
 		//获取手机的经纬度坐标
 		//1.获取位置管理者对象
 		LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -36,11 +29,25 @@ public class LocationService extends Service {
 		lm.requestLocationUpdates(bestProvider, 0, 0, myLocationListener);
 		
 		
-		super.onCreate();
+	}
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		return super.onStartCommand(intent, flags, startId);
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
 	}
 	
 	class MyLocationListener implements LocationListener{
-
+		
 		@Override
 		public void onLocationChanged(Location location) {
 			double longitude = location.getLongitude();//经度
@@ -49,27 +56,22 @@ public class LocationService extends Service {
 			SmsManager sm = SmsManager.getDefault();
 			sm.sendTextMessage("5556", null, "longitude = "+longitude+","+"latitude = "+latitude, null, null);
 		}
-
+		
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {
 			
 		}
-
+		
 		@Override
 		public void onProviderEnabled(String provider) {
 			
 		}
-
+		
 		@Override
 		public void onProviderDisabled(String provider) {
 			
 		}
 		
-	}
-	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
 	}
 	
 }
