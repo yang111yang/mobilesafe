@@ -68,6 +68,33 @@ public class SpUtil {
 	}
 	
 	/**
+	 * @param ctx	上下文环境
+	 * @param key	存储节点的名称
+	 * @param value 存储节点的值int
+	 */
+	public static void putInt(Context ctx, String key, int value){
+		if (sp==null) {
+			sp = ctx.getSharedPreferences("config", Context.MODE_PRIVATE);
+		}
+		sp.edit().putInt(key, value).commit();
+	}
+	
+	/**
+	 * 从sp中读取int标识的值
+	 * @param ctx		上下文环境
+	 * @param key		存储节点的名称
+	 * @param defValue  没有此节点默认值
+	 * @return			默认值或者此节点读取到的结果
+	 */
+	public static int getInt(Context ctx, String key, int defValue){
+		if (sp==null) {
+			sp = ctx.getSharedPreferences("config", Context.MODE_PRIVATE);
+		}
+		return sp.getInt(key, defValue);
+		
+	}
+	
+	/**
 	 * 从sp中移除指定节点
 	 * @param ctx 上下文环境
 	 * @param key sim卡的序列卡号

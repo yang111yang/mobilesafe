@@ -70,6 +70,8 @@ public class QueryAddressActivity extends Activity {
 					Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 					//震动的毫秒值
 					vibrator.vibrate(2000);
+					//规律震动(震动规则(不震动时间，震动时间，不震动时间，震动时间。。。)，重复次数)
+					vibrator.vibrate(new long[]{2000,5000,2000,5000}, -1);
 				}
 			}
 		});
