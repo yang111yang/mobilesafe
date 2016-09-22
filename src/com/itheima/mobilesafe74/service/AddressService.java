@@ -112,7 +112,7 @@ public class AddressService extends Service {
 				R.drawable.call_locate_gray,
 				R.drawable.call_locate_green};
 		int toastStyleIndex = SpUtil.getInt(getApplicationContext(), ConstantValue.TOAST_STYLE, 0);
-		
+		tv_toast.setBackgroundResource(mDrawableIds[toastStyleIndex]);
 		// 在窗体上挂载一个View(权限)
 		mWM.addView(mToastView, mParams);
 
