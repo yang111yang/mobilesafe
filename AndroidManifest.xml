@@ -57,6 +57,8 @@
         <activity android:name="com.itheima.mobilesafe74.activity.ContactListActivity" />
         <activity android:name="com.itheima.mobilesafe74.activity.AToolActivity" />
         <activity android:name="com.itheima.mobilesafe74.activity.QueryAddressActivity" />
+        <activity android:name="com.itheima.mobilesafe74.activity.ToastLocationActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <receiver android:name="com.itheima.mobilesafe74.receiver.BootReceiver" >
             <intent-filter>

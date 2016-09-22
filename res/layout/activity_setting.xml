@@ -32,5 +32,9 @@
         android:id="@+id/scv_toast_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    <com.itheima.mobilesafe74.view.SettingClickView
+        android:id="@+id/scv_toast_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

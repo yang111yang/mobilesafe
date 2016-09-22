@@ -21,6 +21,7 @@ public class SettingActivity extends Activity {
 	private String[] mToastStyleDes;
 	private SettingClickView scv_toast_style;
 	private int mToastStyle;
+	private SettingClickView scv_toast_location;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,24 @@ public class SettingActivity extends Activity {
 		initUpdate();
 		initAddress();
 		initToastStyle();
+		initToastLocation();
+	}
+
+	/**
+	 * 双击居中view所在屏幕位置的处理方法
+	 */
+	private void initToastLocation() {
+		//关联控件
+		scv_toast_location = (SettingClickView) findViewById(R.id.scv_toast_location);
+		scv_toast_location.setTitle("归属地提示框的位置");
+		scv_toast_location.setDes("设置归属地提示框的位置");
+		scv_toast_location.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(getApplicationContext(),ToastLocationActivity.class));
+			}
+		});
 	}
 
 	/**
