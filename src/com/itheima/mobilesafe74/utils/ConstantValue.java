@@ -58,5 +58,17 @@ public class ConstantValue {
 	public static final String TOAST_STYLE = "toast_style";
 
 
+	/**
+	 * 吐司位置选择界面中移动控件后X坐标所在的key
+	 */
+	public static final String LOCATION_X = "location_x";
+
+
+	/**
+	 * 吐司位置选择界面中移动控件后Y坐标所在的key
+	 */
+	public static final String LOCATION_Y = "location_y";
+
+
 
 }
