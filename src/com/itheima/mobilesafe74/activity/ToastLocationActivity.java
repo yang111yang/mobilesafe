@@ -64,6 +64,14 @@ public class ToastLocationActivity extends Activity {
 		// 将以上规则作用在iv_drag上
 		iv_drag.setLayoutParams(layoutParams);
 
+		if (locationY > mScreenHeight / 2) {
+			btn_top.setVisibility(View.VISIBLE);
+			btn_bottom.setVisibility(View.INVISIBLE);
+		} else {
+			btn_top.setVisibility(View.INVISIBLE);
+			btn_bottom.setVisibility(View.VISIBLE);
+		}
+
 		// 2.给ImageView控件设置触摸事件
 		iv_drag.setOnTouchListener(new OnTouchListener() {
 
@@ -96,11 +104,17 @@ public class ToastLocationActivity extends Activity {
 
 					// 容错处理
 					// 边缘不能超出屏幕可显示范围
-					if (left < 0
-							|| right < mScreenWidth
-							|| top < 0
-							|| bottom < mScreenHeight - 22) {
+					if (left < 0 || right > mScreenWidth || top < 0
+							|| bottom > mScreenHeight - 22) {
 						return true;
+					}
+
+					if (bottom > mScreenHeight / 2) {
+						btn_top.setVisibility(View.VISIBLE);
+						btn_bottom.setVisibility(View.INVISIBLE);
+					} else {
+						btn_top.setVisibility(View.INVISIBLE);
+						btn_bottom.setVisibility(View.VISIBLE);
 					}
 
 					// 2.告知当前控件，按给定的坐标去做提示
@@ -109,7 +123,6 @@ public class ToastLocationActivity extends Activity {
 					// 3.重置一次控件坐标
 					startX = (int) event.getRawX();
 					startY = (int) event.getRawY();
-					// 4.容错处理
 
 					break;
 				case MotionEvent.ACTION_UP:
@@ -117,7 +130,7 @@ public class ToastLocationActivity extends Activity {
 					SpUtil.putInt(getApplicationContext(),
 							ConstantValue.LOCATION_X, iv_drag.getLeft());
 					SpUtil.putInt(getApplicationContext(),
-							ConstantValue.LOCATION_Y, iv_drag.getRight());
+							ConstantValue.LOCATION_Y, iv_drag.getTop());
 					break;
 
 				}
