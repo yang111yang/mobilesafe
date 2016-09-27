@@ -2,14 +2,15 @@ package com.itheima.mobilesafe74.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 
 import com.itheima.mobilesafe74.R;
 import com.itheima.mobilesafe74.utils.ConstantValue;
@@ -18,11 +19,18 @@ import com.itheima.mobilesafe74.utils.SpUtil;
 public class ToastLocationActivity extends Activity {
 
 	private ImageView iv_drag;
+
 	private Button btn_top;
+
 	private Button btn_bottom;
+
 	private WindowManager mWM;
+
 	private int mScreenWidth;
+
 	private int mScreenHeight;
+
+	private long[] mHits = new long[2];
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +79,29 @@ public class ToastLocationActivity extends Activity {
 			btn_top.setVisibility(View.INVISIBLE);
 			btn_bottom.setVisibility(View.VISIBLE);
 		}
+
+		iv_drag.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				System.arraycopy(mHits, 1, mHits, 0, mHits.length - 1);
+				mHits[mHits.length - 1] = SystemClock.uptimeMillis();
+				if (mHits[mHits.length - 1] - mHits[0] < 500) {
+					// 满足双击事件后调用的代码
+					int left = mScreenWidth / 2 - iv_drag.getWidth() / 2;
+					int right = mScreenWidth / 2 + iv_drag.getWidth() / 2;
+					int top = mScreenHeight / 2 - iv_drag.getHeight() / 2;
+					int bottom = mScreenHeight / 2 + iv_drag.getHeight() / 2;
+					
+					iv_drag.layout(left, top, right, bottom);
+					//存储iv_drag的位置
+					SpUtil.putInt(getApplicationContext(),
+							ConstantValue.LOCATION_X, iv_drag.getLeft());
+					SpUtil.putInt(getApplicationContext(),
+							ConstantValue.LOCATION_Y, iv_drag.getTop());
+				}
+			}
+		});
 
 		// 2.给ImageView控件设置触摸事件
 		iv_drag.setOnTouchListener(new OnTouchListener() {
@@ -134,7 +165,8 @@ public class ToastLocationActivity extends Activity {
 					break;
 
 				}
-				return true;
+				//如果既要响应点击事件，又要响应拖拽事件，就要把返回值结果改为false
+				return false;
 			}
 		});
 	}

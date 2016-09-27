@@ -9,7 +9,9 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -34,6 +36,8 @@ public class AddressService extends Service {
 		};
 	};
 	private int[] mDrawableIds;
+	private int mScreenWidth;
+	private int mScreenHeight;
 
 	@Override
 	public void onCreate() {
@@ -48,6 +52,10 @@ public class AddressService extends Service {
 
 		// 获取窗体对象
 		mWM = (WindowManager) getSystemService(WINDOW_SERVICE);
+		// 获取屏幕的宽和高
+		mScreenWidth = mWM.getDefaultDisplay().getWidth();
+		mScreenHeight = mWM.getDefaultDisplay().getHeight();
+
 	}
 
 	class MyPhoneStateListener extends PhoneStateListener {
@@ -98,20 +106,85 @@ public class AddressService extends Service {
 
 		params.gravity = Gravity.LEFT + Gravity.TOP;
 
-		// 吐司的显示效果，将吐司挂载到WindowManager上
+		// params.x为吐司左上角的坐标
+		params.x = SpUtil.getInt(getApplicationContext(),
+				ConstantValue.LOCATION_X, 0);
+		params.y = SpUtil.getInt(getApplicationContext(),
+				ConstantValue.LOCATION_Y, 0);
 
+		// 吐司的显示效果，将吐司挂载到WindowManager上
 		mToastView = View.inflate(getApplicationContext(), R.layout.toast_view,
 				null);
 		tv_toast = (TextView) mToastView.findViewById(R.id.tv_toast);
-		
-		//从sp中获取色值文字的索引，匹配图片，用做展示
-		mDrawableIds = new int[]{
-				R.drawable.call_locate_white,
-				R.drawable.call_locate_orange,
-				R.drawable.call_locate_blue,
-				R.drawable.call_locate_gray,
-				R.drawable.call_locate_green};
-		int toastStyleIndex = SpUtil.getInt(getApplicationContext(), ConstantValue.TOAST_STYLE, 0);
+
+		mToastView.setOnTouchListener(new OnTouchListener() {
+
+			private int startX;
+			private int startY;
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					// 控件起始位置的坐标
+					startX = (int) event.getRawX();
+					startY = (int) event.getRawY();
+					break;
+				case MotionEvent.ACTION_MOVE:
+					// 控件移动位置的坐标
+					int moveX = (int) event.getRawX();
+					int moveY = (int) event.getRawY();
+
+					// 控件的偏移量
+					int diyX = moveX - startX;
+					int diyY = moveY - startY;
+
+					params.x = params.x + diyX;
+					params.y = params.y + diyY;
+
+					// 容错处理
+					if (params.x < 0) {
+						params.x = 0;
+					}
+					if (params.x > mScreenWidth-mToastView.getWidth()) {
+						params.x = mScreenWidth-mToastView.getWidth();
+					}
+					if (params.y<0) {
+						params.y=0;
+					}
+					if (params.y>mScreenHeight-mToastView.getHeight()-22) {
+						params.y=mScreenHeight-mToastView.getHeight()-22;
+					}
+
+					// 2.告知窗体吐司需要按照手势的移动，去做位置的更新
+					mWM.updateViewLayout(mToastView, params);
+
+					// 3.重置一次控件坐标
+					startX = (int) event.getRawX();
+					startY = (int) event.getRawY();
+
+					break;
+				case MotionEvent.ACTION_UP:
+					// 记录控件移动之后的位置
+					SpUtil.putInt(getApplicationContext(),
+							ConstantValue.LOCATION_X, params.x);
+					SpUtil.putInt(getApplicationContext(),
+							ConstantValue.LOCATION_Y, params.y);
+					break;
+
+				}
+				// 如果既要响应点击事件，又要响应拖拽事件，就要把返回值结果改为false
+				return false;
+			}
+		});
+
+		// 从sp中获取色值文字的索引，匹配图片，用做展示
+		mDrawableIds = new int[] { R.drawable.call_locate_white,
+				R.drawable.call_locate_orange, R.drawable.call_locate_blue,
+				R.drawable.call_locate_gray, R.drawable.call_locate_green };
+		int toastStyleIndex = SpUtil.getInt(getApplicationContext(),
+				ConstantValue.TOAST_STYLE, 0);
 		tv_toast.setBackgroundResource(mDrawableIds[toastStyleIndex]);
 		// 在窗体上挂载一个View(权限)
 		mWM.addView(mToastView, mParams);
