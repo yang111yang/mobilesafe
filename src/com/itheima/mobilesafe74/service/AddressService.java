@@ -1,7 +1,10 @@
 package com.itheima.mobilesafe74.service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.IBinder;
@@ -38,6 +41,7 @@ public class AddressService extends Service {
 	private int[] mDrawableIds;
 	private int mScreenWidth;
 	private int mScreenHeight;
+	private InnerOutCallReceiver mInnerOutCallReceiver;
 
 	@Override
 	public void onCreate() {
@@ -55,8 +59,28 @@ public class AddressService extends Service {
 		// 获取屏幕的宽和高
 		mScreenWidth = mWM.getDefaultDisplay().getWidth();
 		mScreenHeight = mWM.getDefaultDisplay().getHeight();
+		
+		//监听拨出电话的广播过滤条件(权限)
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(Intent.ACTION_NEW_OUTGOING_CALL);
+		//创建广播接收者
+		mInnerOutCallReceiver = new InnerOutCallReceiver();
+		registerReceiver(mInnerOutCallReceiver, intentFilter);
 
 	}
+	
+	class InnerOutCallReceiver extends BroadcastReceiver{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			//接收此广播后，需要显示自定义的吐司，显示拨出归属地号码
+			//获取拨出电话号码的字符串
+			String phone = getResultData();
+			showToast(phone);
+		}
+		
+	}
+	
 
 	class MyPhoneStateListener extends PhoneStateListener {
 
@@ -215,6 +239,11 @@ public class AddressService extends Service {
 		// 取消对电话状态的监听
 		if (mTM != null && mPhoneStateListener != null) {
 			mTM.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+		}
+		
+		//注销InnerOutCallReceiver
+		if (mInnerOutCallReceiver!=null) {
+			unregisterReceiver(mInnerOutCallReceiver);
 		}
 	}
 
