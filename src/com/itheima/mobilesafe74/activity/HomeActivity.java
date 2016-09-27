@@ -63,12 +63,13 @@ public class HomeActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				switch (position) {
-				case 0:
+				case 0://手机防盗
 					// 开启对话框
 					showDialog();
 					break;
-				case 1:
-
+				case 1://通信卫士
+					startActivity(new Intent(getApplicationContext(),
+							BlackNumberActivity.class));
 					break;
 				case 2:
 

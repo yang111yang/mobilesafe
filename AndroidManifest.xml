@@ -61,6 +61,7 @@
         <activity android:name="com.itheima.mobilesafe74.activity.QueryAddressActivity" />
         <activity android:name="com.itheima.mobilesafe74.activity.ToastLocationActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name="com.itheima.mobilesafe74.activity.BlackNumberActivity" />
 
         <receiver android:name="com.itheima.mobilesafe74.receiver.BootReceiver" >
             <intent-filter>
