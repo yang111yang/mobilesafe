@@ -2,8 +2,6 @@ package com.itheima.mobilesafe74.activity;
 
 import java.util.List;
 
-import javax.crypto.spec.IvParameterSpec;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -12,20 +10,29 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.itheima.mobilesafe74.R;
 import com.itheima.mobilesafe74.db.dao.BlackNumberDao;
 import com.itheima.mobilesafe74.db.domain.BlackNumberInfo;
-
+/**
+ * 针对ListView做出一系列的优化
+ * 1.复用convertView
+ * 2.使用ViewHolder服用findViewById
+ * 3.使用分页查询来避免加载过多的数据
+ * @author 刘建阳
+ * @date 2016-9-28 下午3:05:18
+ */
 public class BlackNumberActivity extends Activity {
 
 	private Button btn_add;
@@ -68,14 +75,19 @@ public class BlackNumberActivity extends Activity {
 
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
+			ViewHolder holder = null;
 			if (convertView==null) {
 				convertView = View.inflate(getApplicationContext(), R.layout.list_blacknumber_item, null);
+				holder = new ViewHolder();
+				holder.tv_phone = (TextView) convertView.findViewById(R.id.tv_phone);
+				holder.tv_mode = (TextView) convertView.findViewById(R.id.tv_mode);
+				holder.iv_delete = (ImageView) convertView.findViewById(R.id.iv_delete);
+				convertView.setTag(holder);
+			}else{
+				holder = (ViewHolder) convertView.getTag();
 			}
-			TextView tv_phone = (TextView) convertView.findViewById(R.id.tv_phone);
-			TextView tv_mode = (TextView) convertView.findViewById(R.id.tv_mode);
-			ImageView iv_delete = (ImageView) convertView.findViewById(R.id.iv_delete);
 			
-			iv_delete.setOnClickListener(new OnClickListener() {
+			holder.iv_delete.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
@@ -89,23 +101,29 @@ public class BlackNumberActivity extends Activity {
 				}
 			});
 			
-			tv_phone.setText(mBlackNumberList.get(position).phone);
+			holder.tv_phone.setText(mBlackNumberList.get(position).phone);
 //			tv_mode.setText(mBlackNumberList.get(position).mode);
 			int mode = Integer.parseInt(mBlackNumberList.get(position).mode);
 			switch (mode) {
 			case 1:
-				tv_mode.setText("拦截短信");
+				holder.tv_mode.setText("拦截短信");
 				break;
 			case 2:
-				tv_mode.setText("拦截电话");
+				holder.tv_mode.setText("拦截电话");
 				break;
 			case 3:
-				tv_mode.setText("拦截所有");
+				holder.tv_mode.setText("拦截所有");
 				break;
 			}
 			return convertView;
 		}
 		
+	}
+	
+	static class ViewHolder{
+		public TextView tv_phone;
+		public TextView tv_mode;
+		public ImageView iv_delete;
 	}
 
 	@Override
@@ -129,8 +147,8 @@ public class BlackNumberActivity extends Activity {
 			public void run() {
 				//1.获取操作黑名单数据库的对象
 				mBlackNumberDao = BlackNumberDao.getInstance(getApplicationContext());
-				//2.查询所有数据
-				mBlackNumberList = mBlackNumberDao.findAll();
+				//2.查询部分数据
+				mBlackNumberList = mBlackNumberDao.find(0);
 				//3.消息机制
 				mHandler.sendEmptyMessage(0);
 			};
@@ -150,6 +168,24 @@ public class BlackNumberActivity extends Activity {
 			public void onClick(View v) {
 				
 				showDialog();
+			}
+		});
+		
+		//监听listview的监听状态
+		lv_blacknumber.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				//当滚动过程中状态发生改变调用的方法
+				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE && lv_blacknumber.getLastVisiblePosition()>=mBlackNumberList.size()-1) {
+					
+				}
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				//滚动过程中调用的方法
 			}
 		});
 	}
