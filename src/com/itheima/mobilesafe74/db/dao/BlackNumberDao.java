@@ -10,7 +10,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.itheima.mobilesafe74.db.BlackNumberOpenHelper;
 import com.itheima.mobilesafe74.db.domain.BlackNumberInfo;
-
+/**
+ * 数据库的增删改查
+ * @author 刘建阳
+ * @date 2016-9-28 上午10:39:13
+ */
 public class BlackNumberDao {
 	
 	private BlackNumberOpenHelper blackNumberOpenHelper;
