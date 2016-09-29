@@ -1,6 +1,11 @@
 package com.itheima.mobilesafe74.service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import com.android.internal.telephony.ITelephony;
 import com.itheima.mobilesafe74.db.dao.BlackNumberDao;
+import com.itheima.mobilesafe74.service.AddressService.MyPhoneStateListener;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -8,7 +13,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
+import android.telephony.PhoneStateListener;
 import android.telephony.SmsMessage;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 
 public class BlackNumberService extends Service {
 
@@ -16,16 +24,78 @@ public class BlackNumberService extends Service {
 
 	private BlackNumberDao mDao;
 
+	private TelephonyManager mTM;
+
+	private MyPhoneStateListener mPhoneStateListener;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		
+		mDao = BlackNumberDao.getInstance(getApplicationContext());
+		//拦截短信
 		IntentFilter intentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
 		intentFilter.setPriority(1000);
 		mInnerSmsReceiver = new InnerSmsReceiver();
 		registerReceiver(mInnerSmsReceiver, intentFilter);
+		//拦截电话
+		//监听电话状态的改变
+		// 1.获取电话的管理者对象
+		mTM = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+		// 2.监听电话状态
+		mPhoneStateListener = new MyPhoneStateListener();
+		mTM.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+
 		
 	}
+	
+	class MyPhoneStateListener extends PhoneStateListener {
+
+		// 3.手动重写，电话状态发生改变时触发的方法
+		@Override
+		public void onCallStateChanged(int state, String incomingNumber) {
+			super.onCallStateChanged(state, incomingNumber);
+			switch (state) {
+			case TelephonyManager.CALL_STATE_IDLE:
+				// 空闲状态，没有任何活动
+				break;
+			case TelephonyManager.CALL_STATE_OFFHOOK:
+				// 摘机状态，至少有个电话活动
+				break;
+			case TelephonyManager.CALL_STATE_RINGING:
+				// 响铃状态
+				//挂断电话
+				endCall(incomingNumber);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	
+
+	public void endCall(String phone){
+		int mode = mDao.getMode(phone);
+		if (mode == 2 || mode == 3) {
+			/*ITelephony.Stub.asInterface(ServiceManager.getService(Context.TELEPHONY_SERVICE));
+			ServiceManager此类android对开发者隐藏，所以不能直接调用其方法，所以需要反射调用*/
+			try {
+				//1.获取ServiceManager的字节码文件
+				Class<?> clazz = Class.forName("android.os.ServiceManager");
+				//2.获取方法
+				Method method = clazz.getMethod("getService", String.class);
+				//3.反射调用此方法
+				IBinder iBinder = (IBinder) method.invoke(null, Context.TELEPHONY_SERVICE);
+				//4.调用获取aidl文件对象的方法
+				ITelephony iTelephony = ITelephony.Stub.asInterface(iBinder);
+				//5.调用aidl中隐藏的endCall方法
+				iTelephony.endCall();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
+		}
+	}
+	
 	
 	class InnerSmsReceiver extends BroadcastReceiver{
 
@@ -41,7 +111,7 @@ public class BlackNumberService extends Service {
 				//4.获取短信对象的基本信息
 				String originatingAddress = sms.getOriginatingAddress();
 				
-				mDao = BlackNumberDao.getInstance(getApplicationContext());
+				
 				int mode = mDao.getMode(originatingAddress);
 				if (mode == 1 || mode == 3) {
 					//拦截短信
@@ -64,5 +134,6 @@ public class BlackNumberService extends Service {
 			unregisterReceiver(mInnerSmsReceiver);
 		}
 	}
+	
 	
 }
