@@ -25,38 +25,46 @@ import android.widget.Toast;
 import com.itheima.mobilesafe74.R;
 import com.itheima.mobilesafe74.db.dao.BlackNumberDao;
 import com.itheima.mobilesafe74.db.domain.BlackNumberInfo;
+
 /**
- * 针对ListView做出一系列的优化
- * 1.复用convertView
- * 2.使用ViewHolder服用findViewById
+ * 针对ListView做出一系列的优化 1.复用convertView 2.使用ViewHolder服用findViewById
  * 3.使用分页查询来避免加载过多的数据
+ * 
  * @author 刘建阳
  * @date 2016-9-28 下午3:05:18
  */
 public class BlackNumberActivity extends Activity {
 
 	private Button btn_add;
-	
+
 	private ListView lv_blacknumber;
-	
+
 	private BlackNumberDao mBlackNumberDao;
 
 	private List<BlackNumberInfo> mBlackNumberList;
-	
+
 	private int mode = 1;
+
+	private boolean mIsLoad = false;
 	
+	private int mCount;
+
 	private MyAdapter myAdapter;
-	
-	private Handler mHandler = new Handler(){
+
+	private Handler mHandler = new Handler() {
 
 		public void handleMessage(android.os.Message msg) {
-			//4.告知ListVIew，可以去设置数据适配器了
-			myAdapter = new MyAdapter();
-			lv_blacknumber.setAdapter(myAdapter);
+			if (myAdapter == null) {
+				// 4.告知ListVIew，可以去设置数据适配器了
+				myAdapter = new MyAdapter();
+				lv_blacknumber.setAdapter(myAdapter);
+			}else{
+				myAdapter.notifyDataSetChanged();
+			}
 		};
 	};
-	
-	class MyAdapter extends BaseAdapter{
+
+	class MyAdapter extends BaseAdapter {
 
 		@Override
 		public int getCount() {
@@ -74,35 +82,40 @@ public class BlackNumberActivity extends Activity {
 		}
 
 		@Override
-		public View getView(final int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
 			ViewHolder holder = null;
-			if (convertView==null) {
-				convertView = View.inflate(getApplicationContext(), R.layout.list_blacknumber_item, null);
+			if (convertView == null) {
+				convertView = View.inflate(getApplicationContext(),
+						R.layout.list_blacknumber_item, null);
 				holder = new ViewHolder();
-				holder.tv_phone = (TextView) convertView.findViewById(R.id.tv_phone);
-				holder.tv_mode = (TextView) convertView.findViewById(R.id.tv_mode);
-				holder.iv_delete = (ImageView) convertView.findViewById(R.id.iv_delete);
+				holder.tv_phone = (TextView) convertView
+						.findViewById(R.id.tv_phone);
+				holder.tv_mode = (TextView) convertView
+						.findViewById(R.id.tv_mode);
+				holder.iv_delete = (ImageView) convertView
+						.findViewById(R.id.iv_delete);
 				convertView.setTag(holder);
-			}else{
+			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			
+
 			holder.iv_delete.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
-					//1.数据库删除
+					// 1.数据库删除
 					mBlackNumberDao.delete(mBlackNumberList.get(position).phone);
-					//2.集合中的删除，通知适配器刷新
+					// 2.集合中的删除，通知适配器刷新
 					mBlackNumberList.remove(position);
-					if (myAdapter!= null) {
+					if (myAdapter != null) {
 						myAdapter.notifyDataSetChanged();
 					}
 				}
 			});
-			
+
 			holder.tv_phone.setText(mBlackNumberList.get(position).phone);
-//			tv_mode.setText(mBlackNumberList.get(position).mode);
+			// tv_mode.setText(mBlackNumberList.get(position).mode);
 			int mode = Integer.parseInt(mBlackNumberList.get(position).mode);
 			switch (mode) {
 			case 1:
@@ -117,10 +130,10 @@ public class BlackNumberActivity extends Activity {
 			}
 			return convertView;
 		}
-		
+
 	}
-	
-	static class ViewHolder{
+
+	static class ViewHolder {
 		public TextView tv_phone;
 		public TextView tv_mode;
 		public ImageView iv_delete;
@@ -142,14 +155,14 @@ public class BlackNumberActivity extends Activity {
 	private void initData() {
 		// 获取数据库中所有的电话号码
 		new Thread() {
-
-
 			public void run() {
-				//1.获取操作黑名单数据库的对象
-				mBlackNumberDao = BlackNumberDao.getInstance(getApplicationContext());
-				//2.查询部分数据
+				// 1.获取操作黑名单数据库的对象
+				mBlackNumberDao = BlackNumberDao
+						.getInstance(getApplicationContext());
+				// 2.查询部分数据
 				mBlackNumberList = mBlackNumberDao.find(0);
-				//3.消息机制
+				mCount = mBlackNumberDao.getCount();
+				// 3.消息机制
 				mHandler.sendEmptyMessage(0);
 			};
 		}.start();
@@ -161,31 +174,50 @@ public class BlackNumberActivity extends Activity {
 	private void initUI() {
 		btn_add = (Button) findViewById(R.id.btn_add);
 		lv_blacknumber = (ListView) findViewById(R.id.lv_blacknumber);
-		
+
 		btn_add.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				
+
 				showDialog();
 			}
 		});
-		
-		//监听listview的监听状态
+
+		// 监听listview的监听状态
 		lv_blacknumber.setOnScrollListener(new OnScrollListener() {
-			
+
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				//当滚动过程中状态发生改变调用的方法
-				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE && lv_blacknumber.getLastVisiblePosition()>=mBlackNumberList.size()-1) {
-					
+				// 当滚动过程中状态发生改变调用的方法
+				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE
+						&& lv_blacknumber.getLastVisiblePosition() >= mBlackNumberList
+								.size() - 1 && !mIsLoad) {
+					// 加载下一页数据
+					// mIsLoad防止重复加载的变量
+					if (mCount>mBlackNumberList.size()) {
+						new Thread() {
+							public void run() {
+								// 1.获取操作黑名单数据库的对象
+								mBlackNumberDao = BlackNumberDao
+										.getInstance(getApplicationContext());
+								// 2.查询部分数据
+								List<BlackNumberInfo> moreData = mBlackNumberDao
+										.find(mBlackNumberList.size());
+								// 3.添加下一页数据的过程
+								mBlackNumberList.addAll(moreData);
+								//4.通知适配器刷新数据
+								mHandler.sendEmptyMessage(0);
+							};
+						}.start();
+					}
 				}
 			}
-			
+
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
-				//滚动过程中调用的方法
+				// 滚动过程中调用的方法
 			}
 		});
 	}
@@ -199,62 +231,63 @@ public class BlackNumberActivity extends Activity {
 		RadioGroup rg_group = (RadioGroup) view.findViewById(R.id.rg_group);
 		Button btn_submit = (Button) view.findViewById(R.id.btn_submit);
 		Button btn_cancel = (Button) view.findViewById(R.id.btn_cancel);
-		
-		//监听其选中条目的切换过程
+
+		// 监听其选中条目的切换过程
 		rg_group.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				switch (checkedId) {
-				case R.id.rb_sms://拦截短信
+				case R.id.rb_sms:// 拦截短信
 					mode = 1;
 					break;
-				case R.id.rb_phone://拦截电话
+				case R.id.rb_phone:// 拦截电话
 					mode = 2;
 					break;
-				case R.id.rb_all://拦截所有
+				case R.id.rb_all:// 拦截所有
 					mode = 3;
 					break;
 				}
 			}
 		});
-		
+
 		btn_submit.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				//1.获取输入框中的内容
+				// 1.获取输入框中的内容
 				String phone = et_phone.getText().toString();
 				if (!TextUtils.isEmpty(phone)) {
-					//2.数据库插入当前输入的电话号码
-					mBlackNumberDao.insert(phone, mode+"");
-					//3.让数据库和集合保持同步
+					// 2.数据库插入当前输入的电话号码
+					mBlackNumberDao.insert(phone, mode + "");
+					// 3.让数据库和集合保持同步
 					BlackNumberInfo blackNumberInfo = new BlackNumberInfo();
 					blackNumberInfo.phone = phone;
-					blackNumberInfo.mode = mode+"";
-					//4.将对象插入到集合的顶部
+					blackNumberInfo.mode = mode + "";
+					// 4.将对象插入到集合的顶部
 					mBlackNumberList.add(0, blackNumberInfo);
-					//5.通知数据适配器刷新
-					if (myAdapter!=null) {
+					// 5.通知数据适配器刷新
+					if (myAdapter != null) {
 						myAdapter.notifyDataSetChanged();
 					}
 					dialog.dismiss();
-					
-				}else{
-					Toast.makeText(getApplicationContext(), "请输入电话号码", Toast.LENGTH_SHORT).show();
+
+				} else {
+					Toast.makeText(getApplicationContext(), "请输入电话号码",
+							Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
-		
+
 		btn_cancel.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				dialog.dismiss();
 			}
 		});
-		
+
 		dialog.show();
-		
+
 	}
 
 }

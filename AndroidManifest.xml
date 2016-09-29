@@ -99,6 +99,7 @@
 
         <service android:name="com.itheima.mobilesafe74.service.LocationService" />
         <service android:name="com.itheima.mobilesafe74.service.AddressService" />
+        <service android:name="com.itheima.mobilesafe74.service.BlackNumberService" />
     </application>
 
 </manifest>

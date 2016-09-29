@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 
 import com.itheima.mobilesafe74.R;
 import com.itheima.mobilesafe74.service.AddressService;
+import com.itheima.mobilesafe74.service.BlackNumberService;
 import com.itheima.mobilesafe74.utils.ConstantValue;
 import com.itheima.mobilesafe74.utils.ServiceUtil;
 import com.itheima.mobilesafe74.utils.SpUtil;
@@ -32,6 +33,31 @@ public class SettingActivity extends Activity {
 		initAddress();
 		initToastStyle();
 		initToastLocation();
+		initBlackNumber();
+	}
+
+	/**
+	 * 黑名单管理的开启与关闭
+	 */
+	private void initBlackNumber() {
+		final SettingItemView siv_blacknumber = (SettingItemView) findViewById(R.id.siv_blacknumber);
+		boolean isRunning = ServiceUtil.isRunning(this, "com.itheima.mobilesafe74.service.BlackNumberService");
+		siv_blacknumber.setCheck(isRunning);
+		siv_blacknumber.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				boolean isChecked = siv_blacknumber.isChecked();
+				siv_blacknumber.setCheck(!isChecked);
+				if (!isChecked) {
+					//开启服务
+					startService(new Intent(getApplicationContext(),BlackNumberService.class));
+				}else{
+					//关闭服务
+					stopService(new Intent(getApplicationContext(),BlackNumberService.class));
+				}
+			}
+		});
 	}
 
 	/**

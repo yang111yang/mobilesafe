@@ -36,5 +36,13 @@
         android:id="@+id/scv_toast_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+      <com.itheima.mobilesafe74.view.SettingItemView
+        xmlns:mobilesafe="http://schemas.android.com/apk/res/com.itheima.mobilesafe74"
+        android:id="@+id/siv_blacknumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        mobilesafe:desoff="黑名单拦截已关闭"
+        mobilesafe:deson="黑名单拦截已开启"
+        mobilesafe:destitle="黑名单拦截设置" />
 
 </LinearLayout>

@@ -119,4 +119,29 @@ public class BlackNumberDao {
 		return blackNumberList;
 	}
 	
+	/**
+	 * @return 数据库中数据总条目的个数，返回0代表数据库中没有数据或异常
+	 */
+	public int getCount(){
+		SQLiteDatabase db = blackNumberOpenHelper.getWritableDatabase();
+		int count = 0;
+		Cursor cursor = db.rawQuery("select count(*) from blacknumber", null);
+		while (cursor.moveToNext()) {
+			count = cursor.getInt(0);
+		}
+		cursor.close();
+		db.close();
+		return count;
+	}
+	
+	
 }
+
+
+
+
+
+
+
+
+
