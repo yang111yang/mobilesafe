@@ -1,11 +1,6 @@
 package com.itheima.mobilesafe74.service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import com.android.internal.telephony.ITelephony;
-import com.itheima.mobilesafe74.db.dao.BlackNumberDao;
-import com.itheima.mobilesafe74.service.AddressService.MyPhoneStateListener;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -19,7 +14,9 @@ import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
-import android.util.Log;
+
+import com.android.internal.telephony.ITelephony;
+import com.itheima.mobilesafe74.db.dao.BlackNumberDao;
 
 public class BlackNumberService extends Service {
 
