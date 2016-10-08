@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import com.itheima.mobilesafe74.R;
 import com.itheima.mobilesafe74.db.dao.BlackNumberDao;
-import com.itheima.mobilesafe74.db.domain.BlackNumberInfo;
+import com.itheima.mobilesafe74.domain.BlackNumberInfo;
 
 /**
  * 针对ListView做出一系列的优化 1.复用convertView 2.使用ViewHolder服用findViewById

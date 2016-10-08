@@ -24,7 +24,7 @@ public class SpUtil {
 		}
 		sp.edit().putBoolean(key, value).commit();
 	}
-	//读
+	
 	/**
 	 * 从sp中读取boolean标识的值
 	 * @param ctx		上下文环境

@@ -79,7 +79,6 @@ public class SmsBackUp {
 			newSerializer.endTag(null, "smss");
 			newSerializer.endDocument();
 			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally{
@@ -93,6 +92,8 @@ public class SmsBackUp {
 			}
 		}
 	}
+	
+	
 	
 	/*回调
 	1.定义一个接口

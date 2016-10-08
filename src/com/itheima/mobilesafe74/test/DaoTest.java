@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.itheima.mobilesafe74.db.dao.BlackNumberDao;
-import com.itheima.mobilesafe74.db.domain.BlackNumberInfo;
+import com.itheima.mobilesafe74.domain.BlackNumberInfo;
 
 import android.test.AndroidTestCase;
 

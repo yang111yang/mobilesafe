@@ -1,4 +1,4 @@
-package com.itheima.mobilesafe74.db.domain;
+package com.itheima.mobilesafe74.domain;
 
 public class BlackNumberInfo {
 

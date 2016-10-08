@@ -9,7 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.itheima.mobilesafe74.db.BlackNumberOpenHelper;
-import com.itheima.mobilesafe74.db.domain.BlackNumberInfo;
+import com.itheima.mobilesafe74.domain.BlackNumberInfo;
 /**
  * 数据库的增删改查
  * @author 刘建阳
