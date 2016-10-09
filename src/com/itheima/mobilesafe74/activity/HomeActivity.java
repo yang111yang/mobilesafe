@@ -75,8 +75,9 @@ public class HomeActivity extends Activity {
 					startActivity(new Intent(getApplicationContext(),
 							AppManagerActivity.class));
 					break;
-				case 3:
-
+				case 3://进程管理
+					startActivity(new Intent(getApplicationContext(),
+							ProgressManagerActivity.class));
 					break;
 				case 4:
 

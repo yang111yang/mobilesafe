@@ -75,6 +75,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name="com.itheima.mobilesafe74.activity.BlackNumberActivity" />
         <activity android:name="com.itheima.mobilesafe74.activity.AppManagerActivity" />
+        <activity android:name="com.itheima.mobilesafe74.activity.ProgressManagerActivity" />
 
         <receiver android:name="com.itheima.mobilesafe74.receiver.BootReceiver" >
             <intent-filter>
