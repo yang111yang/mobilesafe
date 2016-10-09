@@ -11,6 +11,8 @@ import android.os.StatFs;
 import android.text.format.Formatter;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -30,12 +32,17 @@ public class AppManagerActivity extends Activity {
 
 	private List<AppInfo> mSystemList;
 
+	private TextView tv_des;
+
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			MyAdapter mAdapter = new MyAdapter();
 			lv_app_list.setAdapter(mAdapter);
+			tv_des.setText("用户应用(" + mCustomerList.size()
+							+ ")");
 		};
 	};
+
 
 	class MyAdapter extends BaseAdapter {
 
@@ -161,6 +168,7 @@ public class AppManagerActivity extends Activity {
 	 */
 	private void initList() {
 		lv_app_list = (ListView) findViewById(R.id.lv_app_list);
+		tv_des = (TextView) findViewById(R.id.tv_des);
 		new Thread() {
 
 			public void run() {
@@ -180,6 +188,34 @@ public class AppManagerActivity extends Activity {
 				mHandler.sendEmptyMessage(0);
 			};
 		}.start();
+		
+		lv_app_list.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				/*滚动过程中调用的方法
+				AbsListView中的view就是listview对象
+				firstVisibleItem第一个可见的条目
+				visibleItemCount当前一个屏幕的可见的条目总数
+				totalItemCount总条目的总数*/
+				if (mCustomerList != null && mSystemList != null) {
+					if (firstVisibleItem >= mCustomerList.size() + 1) {
+						tv_des.setText("系统应用(" + mSystemList.size()
+								+ ")");
+					}else{
+						tv_des.setText("用户应用(" + mCustomerList.size()
+								+ ")");
+					}
+				}
+			}
+		});
+		
 	}
 
 	/**
