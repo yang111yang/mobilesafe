@@ -1,5 +1,6 @@
 package com.itheima.mobilesafe74.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -23,25 +24,56 @@ public class AppManagerActivity extends Activity {
 
 	private ListView lv_app_list;
 
-	private List<AppInfo> appInfoList;
-	
-	private Handler mHandler = new Handler(){
+	private List<AppInfo> mAppInfoList;
+
+	private List<AppInfo> mCustomerList;
+
+	private List<AppInfo> mSystemList;
+
+	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			MyAdapter mAdapter = new MyAdapter();
 			lv_app_list.setAdapter(mAdapter);
 		};
 	};
-	
-	class MyAdapter extends BaseAdapter{
 
+	class MyAdapter extends BaseAdapter {
+
+		// 获取适配器中条目类型的整数，修改成两种(纯文本,图片+文字)
+		@Override
+		public int getViewTypeCount() {
+			return super.getViewTypeCount() + 1;
+		}
+
+		// 指定索引指向的条目类型，条目类型状态码指定(0(复用系统),1)
+		@Override
+		public int getItemViewType(int position) {
+			if (position == 0 || position == mCustomerList.size() + 1) {
+				// 返回0,代表纯文本条目状态码
+				return 0;
+			} else {
+				// 返回1,代表图片+文本状态码
+				return 1;
+			}
+		}
+
+		// ListView中添加两个描述性的条目
 		@Override
 		public int getCount() {
-			return appInfoList.size();
+			return mCustomerList.size() + mSystemList.size() + 2;
 		}
 
 		@Override
-		public Object getItem(int position) {
-			return appInfoList.get(position);
+		public AppInfo getItem(int position) {
+			if (position == 0 || position == mCustomerList.size() + 1) {
+				return null;
+			} else {
+				if (position < mCustomerList.size() + 1) {
+					return mCustomerList.get(position - 1);
+				} else {
+					return mSystemList.get(position - mCustomerList.size() - 2);
+				}
+			}
 		}
 
 		@Override
@@ -51,35 +83,67 @@ public class AppManagerActivity extends Activity {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			ViewHolder holder = null;
-			if (convertView == null) {
-				convertView = View.inflate(getApplicationContext(), R.layout.list_app_item, null);
-				holder = new ViewHolder();
-				holder.iv_icon = (ImageView) convertView.findViewById(R.id.iv_icon);
-				holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
-				holder.tv_path = (TextView) convertView.findViewById(R.id.tv_path);
-				convertView.setTag(holder);
-			}else{
-				holder = (ViewHolder) convertView.getTag();
-			}
-			
-			holder.iv_icon.setBackgroundDrawable(appInfoList.get(position).icon);
-			holder.tv_name.setText(appInfoList.get(position).name);
-			if (appInfoList.get(position).isSdCard) {
-				holder.tv_path.setText("sd卡应用");
-			}else{
-				holder.tv_path.setText("手机应用");
+			int type = getItemViewType(position);
+			if (type == 0) {
+				// 展示灰色条目
+				ViewTitleHolder holder = null;
+				if (convertView == null) {
+					convertView = View.inflate(getApplicationContext(),
+							R.layout.list_app_title_item, null);
+					holder = new ViewTitleHolder();
+					holder.tv_title = (TextView) convertView
+							.findViewById(R.id.tv_title);
+					convertView.setTag(holder);
+				} else {
+					holder = (ViewTitleHolder) convertView.getTag();
+				}
+				if (position == 0) {
+					holder.tv_title.setText("用户应用(" + mCustomerList.size()
+							+ ")");
+				} else {
+					holder.tv_title.setText("系统应用(" + mSystemList.size() + ")");
+				}
+			} else {
+				// 展示图片+文字条目
+				ViewHolder holder = null;
+				if (convertView == null) {
+					convertView = View.inflate(getApplicationContext(),
+							R.layout.list_app_item, null);
+					holder = new ViewHolder();
+					holder.iv_icon = (ImageView) convertView
+							.findViewById(R.id.iv_icon);
+					holder.tv_name = (TextView) convertView
+							.findViewById(R.id.tv_name);
+					holder.tv_path = (TextView) convertView
+							.findViewById(R.id.tv_path);
+					convertView.setTag(holder);
+				} else {
+					holder = (ViewHolder) convertView.getTag();
+				}
+
+				holder.iv_icon.setBackgroundDrawable(getItem(position).icon);
+				holder.tv_name.setText(getItem(position).name);
+				if (getItem(position).isSdCard) {
+					holder.tv_path.setText("sd卡应用");
+				} else {
+					holder.tv_path.setText("手机应用");
+				}
 			}
 			return convertView;
 		}
-		
+
 	}
-	
-	static class ViewHolder{
+
+	static class ViewHolder {
 		ImageView iv_icon;
 		TextView tv_name;
 		TextView tv_path;
-		
+
+	}
+
+	static class ViewTitleHolder {
+		TextView tv_title;
+
 	}
 
 	@Override
@@ -98,8 +162,21 @@ public class AppManagerActivity extends Activity {
 	private void initList() {
 		lv_app_list = (ListView) findViewById(R.id.lv_app_list);
 		new Thread() {
+
 			public void run() {
-				appInfoList = AppInfoProvider.getAppInfoList(getApplicationContext());
+				mAppInfoList = AppInfoProvider
+						.getAppInfoList(getApplicationContext());
+				mCustomerList = new ArrayList<AppInfo>();
+				mSystemList = new ArrayList<AppInfo>();
+				for (AppInfo appInfo : mAppInfoList) {
+					if (appInfo.isSystem) {
+						// 系统应用
+						mSystemList.add(appInfo);
+					} else {
+						// 非系统应用
+						mCustomerList.add(appInfo);
+					}
+				}
 				mHandler.sendEmptyMessage(0);
 			};
 		}.start();
