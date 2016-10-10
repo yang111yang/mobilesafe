@@ -3,75 +3,96 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-    <TextView 
+
+    <TextView
         style="@style/TitleStytle"
-        android:text="进程管理"/>
-    
-    <RelativeLayout 
+        android:text="进程管理" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp">
-        <TextView 
-            android:id="@+id/tv_progress_count"
+        android:padding="5dp" >
+
+        <TextView
+            android:id="@+id/tv_process_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:text="进程总数"
-            android:textSize="14sp"
             android:textColor="#000"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"/>
-        <TextView 
+            android:textSize="14sp" />
+
+        <TextView
             android:id="@+id/tv_memory_info"
-            android:text="剩余内存/总内存"
-            android:textSize="14sp"
-            android:textColor="#000"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:text="剩余内存/总内存"
+            android:textColor="#000"
+            android:textSize="14sp" />
     </RelativeLayout>
 
-    <ListView
-        android:id="@+id/lv_apps"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" >
-    </ListView>
+            android:layout_weight="1" >
 
-    <LinearLayout 
+        <ListView
+            android:id="@+id/lv_process"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/tv_des"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ccc"
+            android:padding="5dp"
+            android:text="用户应用"
+            android:textColor="#fff"
+            android:textSize="18sp" />
+    </FrameLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button 
+        android:orientation="horizontal" >
+
+        <Button
             android:id="@+id/btn_select_all"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="全选"
-            android:textSize="14sp"
-            android:textColor="#000"/>
-        <Button 
-            android:id="@+id/btn_reverse"
+            android:textColor="#000"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_select_reverse"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="反选"
-            android:textSize="14sp"
-            android:textColor="#000"/>
-        <Button 
+            android:textColor="#000"
+            android:textSize="14sp" />
+
+        <Button
             android:id="@+id/btn_clear"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="一键清理"
-            android:textSize="14sp"
-            android:textColor="#000"/>
-        <Button 
+            android:textColor="#000"
+            android:textSize="14sp" />
+
+        <Button
             android:id="@+id/btn_setting"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="设置"
-            android:textSize="14sp"
-            android:textColor="#000"/>
+            android:textColor="#000"
+            android:textSize="14sp" />
     </LinearLayout>
+
 </LinearLayout>
