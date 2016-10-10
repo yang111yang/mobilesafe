@@ -76,5 +76,11 @@ public class ConstantValue {
 	public static final String SHOW_SYSTEM = "show_system";
 
 
+	/**
+	 * 是否已有快捷方式的key
+	 */
+	public static final String HAS_SHORTCUT = "has_shortcut";
+
+
 
 }

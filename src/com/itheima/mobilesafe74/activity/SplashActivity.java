@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -128,6 +129,31 @@ public class SplashActivity extends Activity {
 		initAinmation();
 		//初始化数据库
 		initDB();
+		
+		if (!SpUtil.getBoolean(this, ConstantValue.HAS_SHORTCUT, false)) {
+			//生成快捷方式
+			initShortCut();
+		}
+	}
+
+	/**
+	 * 生成快捷方式
+	 */
+	private void initShortCut() {
+		//1.给intent维护图标，名称
+		Intent intent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+		//维护图标
+		intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+		//名称
+		intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "黑马卫士");
+		//2.点击快捷方式，跳转的页面
+		Intent shortCutIntent = new Intent("android.intent.action.HOME");
+		shortCutIntent.addCategory("android.intent.category.DEFAULT");
+		intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortCutIntent);
+		//3.发送广播
+		sendBroadcast(intent);
+		
+		SpUtil.putBoolean(this, ConstantValue.HAS_SHORTCUT, true);
 	}
 
 	/**
