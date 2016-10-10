@@ -16,7 +16,7 @@ import com.itheima.mobilesafe74.engine.SmsBackUp;
 import com.itheima.mobilesafe74.engine.SmsBackUp.CallBack;
 
 public class AToolActivity extends Activity {
-	private TextView tv_query_phone_address, tv_sms_backup;
+	private TextView tv_query_phone_address, tv_sms_backup,tv_common_number_query;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,24 @@ public class AToolActivity extends Activity {
 		initPhoneAddress();
 		// 短信备份的方法
 		initSmsBackUp();
+		//常用号码查询的方法
+		initCommonNumberQuery();
 
+	}
+
+	/**
+	 * 常用号码查询的方法
+	 */
+	private void initCommonNumberQuery() {
+		tv_common_number_query = (TextView) findViewById(R.id.tv_common_number_query);
+		tv_common_number_query.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(getApplicationContext(),
+						CommonNumberQueryActivity.class));
+			}
+		});
 	}
 
 	/**

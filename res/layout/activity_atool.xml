@@ -29,5 +29,15 @@
         android:textSize="18sp"
         android:background="@drawable/selector_atool_item_bg"
         android:drawableLeft="@android:drawable/btn_star"/>
+    <TextView 
+        android:id="@+id/tv_common_number_query"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center"
+        android:text="常用号码查询"
+        android:textSize="18sp"
+        android:background="@drawable/selector_atool_item_bg"
+        android:drawableLeft="@android:drawable/btn_star"/>
 
 </LinearLayout>
