@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/ll_root"
     android:background="@drawable/widget_bg_portrait"
     android:gravity="center_vertical" >
 
@@ -17,7 +18,7 @@
         android:paddingTop="3.0dip" >
 
         <TextView
-            android:id="@+id/process_count"
+            android:id="@+id/tv_process_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10.0dip" />

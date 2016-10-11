@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import com.itheima.mobilesafe74.R;
 import com.itheima.mobilesafe74.service.AddressService;
 import com.itheima.mobilesafe74.service.BlackNumberService;
+import com.itheima.mobilesafe74.service.WatchDogService;
 import com.itheima.mobilesafe74.utils.ConstantValue;
 import com.itheima.mobilesafe74.utils.ServiceUtil;
 import com.itheima.mobilesafe74.utils.SpUtil;
@@ -34,6 +35,31 @@ public class SettingActivity extends Activity {
 		initToastStyle();
 		initToastLocation();
 		initBlackNumber();
+		initAppLock();
+	}
+
+	/**
+	 * 程序锁的开启与关闭
+	 */
+	private void initAppLock() {
+		final SettingItemView siv_app_lock = (SettingItemView) findViewById(R.id.siv_app_lock);
+		boolean isRunning = ServiceUtil.isRunning(this, "com.itheima.mobilesafe74.service.WatchDogService");
+		siv_app_lock.setCheck(isRunning);
+		siv_app_lock.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				boolean isChecked = siv_app_lock.isChecked();
+				siv_app_lock.setCheck(!isChecked);
+				if (!isChecked) {
+					//开启服务
+					startService(new Intent(getApplicationContext(),WatchDogService.class));
+				}else{
+					//关闭服务
+					stopService(new Intent(getApplicationContext(),WatchDogService.class));
+				}
+			}
+		});
 	}
 
 	/**
