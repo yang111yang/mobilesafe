@@ -24,6 +24,8 @@ public class WatchDogService extends Service {
 	private List<String> mPackageNameList;
 	private IntentFilter mIntentFilter;
 	private String mSkipPackageName;
+	private InnerReceiver mInnerReceiver;
+	private MyContentObserver mContentObserver;
 
 	@Override
 	public void onCreate() {
@@ -34,11 +36,11 @@ public class WatchDogService extends Service {
 		
 		mIntentFilter = new IntentFilter();
 		mIntentFilter.addAction("android.intent.action.SKIP");
-		InnerReceiver innerReceiver = new InnerReceiver();
-		registerReceiver(innerReceiver, mIntentFilter);
+		mInnerReceiver = new InnerReceiver();
+		registerReceiver(mInnerReceiver, mIntentFilter);
 		
 		//注册一个内容观察者，观察数据库的变化，一旦数据库有删除或者添加，则需要让mPackageNameList重新获取数据
-		MyContentObserver mContentObserver = new MyContentObserver(new Handler());
+		mContentObserver = new MyContentObserver(new Handler());
 		getContentResolver().registerContentObserver(Uri.parse("content://applock/change"), true, mContentObserver);
 		
 	}
@@ -119,6 +121,16 @@ public class WatchDogService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		//结束死循环
+		isWatch = false;
+		//注销广播接收者
+		if (mInnerReceiver != null) {
+			unregisterReceiver(mInnerReceiver);
+		}
+		//关闭内容观察者
+		if (mContentObserver != null) {
+			getContentResolver().unregisterContentObserver(mContentObserver);
+		}
 	}
 
 }
