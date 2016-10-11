@@ -92,6 +92,7 @@
         <activity android:name="com.itheima.mobilesafe74.activity.EnterPsdActivity"
             android:launchMode="singleInstance"
             android:excludeFromRecents="true" />
+        <activity android:name="com.itheima.mobilesafe74.activity.AnitVirusActivity" />
 
         <receiver android:name="com.itheima.mobilesafe74.receiver.BootReceiver" >
             <intent-filter>

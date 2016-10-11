@@ -82,8 +82,9 @@ public class HomeActivity extends Activity {
 				case 4:
 
 					break;
-				case 5:
-
+				case 5://手机杀毒
+					startActivity(new Intent(getApplicationContext(),
+							AnitVirusActivity.class));
 					break;
 				case 6:
 
