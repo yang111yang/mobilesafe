@@ -90,7 +90,8 @@
         <activity android:name="com.itheima.mobilesafe74.activity.CommonNumberQueryActivity" />
         <activity android:name="com.itheima.mobilesafe74.activity.AppLockActivity" />
         <activity android:name="com.itheima.mobilesafe74.activity.EnterPsdActivity"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true" />
 
         <receiver android:name="com.itheima.mobilesafe74.receiver.BootReceiver" >
             <intent-filter>

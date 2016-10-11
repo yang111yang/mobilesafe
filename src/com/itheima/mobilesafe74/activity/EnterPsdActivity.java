@@ -78,4 +78,14 @@ public class EnterPsdActivity extends Activity {
 		et_psd = (EditText) findViewById(R.id.et_psd);
 		btn_app_submit = (Button) findViewById(R.id.btn_app_submit);
 	}
+	
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		//跳转到桌面
+		Intent intent = new Intent(Intent.ACTION_MAIN);
+		intent.addCategory(Intent.CATEGORY_HOME);
+		startActivity(intent);
+	}
+	
 }
