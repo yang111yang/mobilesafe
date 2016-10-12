@@ -80,7 +80,8 @@ public class HomeActivity extends Activity {
 							ProgressManagerActivity.class));
 					break;
 				case 4:
-
+					startActivity(new Intent(getApplicationContext(),
+							TrafficActivity.class));
 					break;
 				case 5://手机杀毒
 					startActivity(new Intent(getApplicationContext(),

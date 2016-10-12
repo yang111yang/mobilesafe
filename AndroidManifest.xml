@@ -98,6 +98,7 @@
         <activity android:name="com.itheima.mobilesafe74.activity.CacheClearActivity" />
         <activity android:name="com.itheima.mobilesafe74.activity.BaseCacheClearActivity" />
         <activity android:name="com.itheima.mobilesafe74.activity.SdCacheClearActivity" />
+        <activity android:name="com.itheima.mobilesafe74.activity.TrafficActivity" />
 
         <receiver android:name="com.itheima.mobilesafe74.receiver.BootReceiver" >
             <intent-filter>
