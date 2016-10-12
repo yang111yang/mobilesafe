@@ -164,10 +164,12 @@ public class SplashActivity extends Activity {
 		initAddressDB("address.db");
 		//常用号码数据库的拷贝
 		initAddressDB("commonnum.db");
+		//病毒数据库的拷贝
+		initAddressDB("antivirus.db");
 	}
 
 	/**
-	 * 归属地数据库的拷贝
+	 * 数据库的拷贝
 	 * @param dbName 数据库的名称
 	 */
 	private void initAddressDB(String dbName) {

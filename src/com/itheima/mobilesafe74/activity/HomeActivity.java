@@ -86,8 +86,9 @@ public class HomeActivity extends Activity {
 					startActivity(new Intent(getApplicationContext(),
 							AnitVirusActivity.class));
 					break;
-				case 6:
-
+				case 6://缓存清理
+					startActivity(new Intent(getApplicationContext(),
+							BaseCacheClearActivity.class));
 					break;
 				case 7://高级工具
 					startActivity(new Intent(getApplicationContext(),
