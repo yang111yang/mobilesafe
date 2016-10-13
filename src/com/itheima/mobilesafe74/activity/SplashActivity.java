@@ -8,6 +8,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import net.youmi.android.AdManager;
+import net.youmi.android.normal.spot.SplashViewSettings;
+import net.youmi.android.normal.spot.SpotListener;
+import net.youmi.android.normal.spot.SpotManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,6 +33,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.animation.AlphaAnimation;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -40,8 +46,10 @@ import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
+
 /**
  * Splash界面
+ * 
  * @author 刘建阳
  * @date 2016-9-8 下午3:55:06
  */
@@ -79,9 +87,9 @@ public class SplashActivity extends Activity {
 	private String mVersionDes;
 
 	private int mLocalVersionCode;
-	
+
 	private String mDownloadUrl;
-	
+
 	private RelativeLayout rl_root;
 
 	private Handler mHandler = new Handler() {
@@ -113,7 +121,6 @@ public class SplashActivity extends Activity {
 		};
 	};
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -121,38 +128,74 @@ public class SplashActivity extends Activity {
 		// requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_splash);
 
+		AdManager.getInstance(this).init("4fd24d4d59631ece",
+				"08a700775cae343e", true, true);
+
 		// 初始化UI
 		initUI();
 		// 初始化数据
 		initData();
-		//初始化动画
+		// 初始化动画
 		initAinmation();
-		//初始化数据库
+		// 初始化数据库
 		initDB();
-		
+
 		if (!SpUtil.getBoolean(this, ConstantValue.HAS_SHORTCUT, false)) {
-			//生成快捷方式
+			// 生成快捷方式
 			initShortCut();
 		}
+
+		/*// 设置开屏广告
+		SplashViewSettings splashViewSettings = new SplashViewSettings();
+		splashViewSettings.setTargetClass(HomeActivity.class);
+		// 使用默认布局参数
+		LinearLayout linearLayout = new LinearLayout(this);
+		splashViewSettings.setSplashViewContainer(linearLayout);
+
+		SpotManager.getInstance(this).showSplash(this, splashViewSettings,
+				new SpotListener() {
+
+					@Override
+					public void onSpotClosed() {
+
+					}
+
+					@Override
+					public void onSpotClicked(boolean isWebPage) {
+
+					}
+
+					@Override
+					public void onShowSuccess() {
+
+					}
+
+					@Override
+					public void onShowFailed(int errorCode) {
+
+					}
+				});*/
 	}
 
 	/**
 	 * 生成快捷方式
 	 */
 	private void initShortCut() {
-		//1.给intent维护图标，名称
-		Intent intent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
-		//维护图标
-		intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
-		//名称
+		// 1.给intent维护图标，名称
+		Intent intent = new Intent(
+				"com.android.launcher.action.INSTALL_SHORTCUT");
+		// 维护图标
+		intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, BitmapFactory
+				.decodeResource(getResources(), R.drawable.ic_launcher));
+		// 名称
 		intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "黑马卫士");
-		//2.点击快捷方式，跳转的页面
+		// 2.点击快捷方式，跳转的页面
 		Intent shortCutIntent = new Intent("android.intent.action.HOME");
 		shortCutIntent.addCategory("android.intent.category.DEFAULT");
 		intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortCutIntent);
-		//3.发送广播
+		// 3.发送广播
 		sendBroadcast(intent);
-		
+
 		SpUtil.putBoolean(this, ConstantValue.HAS_SHORTCUT, true);
 	}
 
@@ -160,41 +203,43 @@ public class SplashActivity extends Activity {
 	 * 初始化数据库
 	 */
 	private void initDB() {
-		//归属地数据库的拷贝
+		// 归属地数据库的拷贝
 		initAddressDB("address.db");
-		//常用号码数据库的拷贝
+		// 常用号码数据库的拷贝
 		initAddressDB("commonnum.db");
-		//病毒数据库的拷贝
+		// 病毒数据库的拷贝
 		initAddressDB("antivirus.db");
 	}
 
 	/**
 	 * 数据库的拷贝
-	 * @param dbName 数据库的名称
+	 * 
+	 * @param dbName
+	 *            数据库的名称
 	 */
 	private void initAddressDB(String dbName) {
-		//1.在files文件夹下创建同名数据库的过程
+		// 1.在files文件夹下创建同名数据库的过程
 		File files = getFilesDir();
-		File file = new File(files,dbName);
+		File file = new File(files, dbName);
 		if (file.exists()) {
 			return;
 		}
-		//2.读取第三方资产目录下的文件
+		// 2.读取第三方资产目录下的文件
 		InputStream stream = null;
 		FileOutputStream fos = null;
 		try {
 			stream = getAssets().open(dbName);
-			//3.将读取的内容写入到指定文件夹下的指定文件中 
+			// 3.将读取的内容写入到指定文件夹下的指定文件中
 			fos = new FileOutputStream(file);
-			//4.每次读取内容的大小
+			// 4.每次读取内容的大小
 			byte[] bs = new byte[1024];
 			int temp = -1;
-			while ((temp = stream.read(bs))!=-1) {
+			while ((temp = stream.read(bs)) != -1) {
 				fos.write(bs, 0, temp);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally{
+		} finally {
 			if (stream != null && fos != null) {
 				try {
 					stream.close();
@@ -207,13 +252,13 @@ public class SplashActivity extends Activity {
 	}
 
 	/**
-	 *	添加淡入动画效果
+	 * 添加淡入动画效果
 	 */
 	private void initAinmation() {
 		AlphaAnimation alpha = new AlphaAnimation(0, 1);
 		alpha.setDuration(3000);
 		rl_root.startAnimation(alpha);
-		
+
 	}
 
 	/**
@@ -228,7 +273,7 @@ public class SplashActivity extends Activity {
 		builder.setTitle("版本更新");
 		// 设置描述内容
 		builder.setMessage(mVersionDes);
-		
+
 		// 积极按钮，立即更新
 		builder.setPositiveButton("立即更新", new OnClickListener() {
 
@@ -239,7 +284,7 @@ public class SplashActivity extends Activity {
 				dialog.dismiss();
 			}
 		});
-		
+
 		// 消极按钮，稍后再说
 		builder.setNegativeButton("稍后再说", new OnClickListener() {
 
@@ -250,10 +295,10 @@ public class SplashActivity extends Activity {
 				dialog.dismiss();
 			}
 		});
-		
-		//点击取消事件监听
+
+		// 点击取消事件监听
 		builder.setOnCancelListener(new OnCancelListener() {
-			
+
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				// 即使用户点击取消，也要跳转到主界面
@@ -261,7 +306,7 @@ public class SplashActivity extends Activity {
 				dialog.dismiss();
 			}
 		});
-		
+
 		builder.show();
 	}
 
@@ -276,40 +321,40 @@ public class SplashActivity extends Activity {
 			// 2.获取sd卡的路径
 			String path = Environment.getExternalStorageDirectory()
 					.getAbsolutePath() + File.separator + "mobilesafe74.apk";
-			//3.发送请求，获取apk，并放置到指定路径
+			// 3.发送请求，获取apk，并放置到指定路径
 			HttpUtils httpUtils = new HttpUtils();
-			//4.发送请求，传递参数(下载地址，下载应用放置的位置)
+			// 4.发送请求，传递参数(下载地址，下载应用放置的位置)
 			httpUtils.download(mDownloadUrl, path, new RequestCallBack<File>() {
-				
+
 				@Override
 				public void onSuccess(ResponseInfo<File> responseInfo) {
-					//下载成功
+					// 下载成功
 					Log.i(TAG, "下载成功");
 					File file = responseInfo.result;
-					//提示用户安装
+					// 提示用户安装
 					installApk(file);
 				}
-				
+
 				@Override
 				public void onFailure(HttpException arg0, String arg1) {
-					//下载失败
+					// 下载失败
 					Log.i(TAG, "下载失败");
 				}
-				
-				//刚刚开始下载的方法
+
+				// 刚刚开始下载的方法
 				@Override
 				public void onStart() {
 					Log.i(TAG, "刚刚开始下载");
 					super.onStart();
 				}
-				
-				//下载过程中的方法(下载apk的总大小，当前下载的位置，是否正在下载)
+
+				// 下载过程中的方法(下载apk的总大小，当前下载的位置，是否正在下载)
 				@Override
 				public void onLoading(long total, long current,
 						boolean isUploading) {
 					Log.i(TAG, "下载中...");
-					Log.i(TAG, "total:"+total);
-					Log.i(TAG, "current:"+current);
+					Log.i(TAG, "total:" + total);
+					Log.i(TAG, "current:" + current);
 					super.onLoading(total, current, isUploading);
 				}
 			});
@@ -319,30 +364,30 @@ public class SplashActivity extends Activity {
 
 	/**
 	 * 安装对应apk的方法
-	 * @param file	安装文件
+	 * 
+	 * @param file
+	 *            安装文件
 	 */
 	protected void installApk(File file) {
-		//系统应用界面，系统的源码，安装入口
+		// 系统应用界面，系统的源码，安装入口
 		Intent intent = new Intent("android.intent.action.VIEW");
 		intent.addCategory("android.intent.category.DEFAULT");
-		/*//文件作为数据源
-		intent.setData(Uri.fromFile(file));
-		//设置安装的类型
-		intent.setType("application/vnd.android.package-archive");*/
-		intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+		/*
+		 * //文件作为数据源 intent.setData(Uri.fromFile(file)); //设置安装的类型
+		 * intent.setType("application/vnd.android.package-archive");
+		 */
+		intent.setDataAndType(Uri.fromFile(file),
+				"application/vnd.android.package-archive");
 		startActivityForResult(intent, 0);
-		/* 
-		 * 升级
-		 * 注意事项：
-		 * 1.要将原有应用覆盖，包名要一致  
-		 * 2.签名要一致
+		/*
+		 * 升级 注意事项： 1.要将原有应用覆盖，包名要一致 2.签名要一致
 		 * 从Eclipse运行到手机上的应用，使用的是bin目录下的应用，使用debug.keystore签名应用
 		 * 手机卫士版本1，右键运行至手机，所以使用的签名文件是debug.keystore
 		 * 手机卫士版本2，是单独打包，生成签名文件，所以签名文件是heima74keystore
 		 * 生成一个heima74keystore为签名文件的apk
 		 */
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		enterHome();
@@ -376,12 +421,12 @@ public class SplashActivity extends Activity {
 		 */
 		if (SpUtil.getBoolean(this, ConstantValue.OPEN_UPDATE, false)) {
 			checkedVersion();
-		}else{
-			//直接进入应用程序主界面
-//			enterHome();
-			//消息机制
-//			mHandler.sendMessageDelayed(msg, 4000);
-			//在发送消息4秒后，去处理ENTER_HOME状态吗指定的消息
+		} else {
+			// 直接进入应用程序主界面
+			// enterHome();
+			// 消息机制
+			// mHandler.sendMessageDelayed(msg, 4000);
+			// 在发送消息4秒后，去处理ENTER_HOME状态吗指定的消息
 			mHandler.sendEmptyMessageDelayed(ENTER_HOME, 4000);
 		}
 	}
@@ -399,7 +444,6 @@ public class SplashActivity extends Activity {
 		 */
 		new Thread() {
 
-			
 			public void run() {
 				// 发送请求获取数据，参数为请求json的链接地址
 				// http://192.168.1.102:8080/update.json 测试阶段不是最优
@@ -435,8 +479,7 @@ public class SplashActivity extends Activity {
 						mVersionDes = jsonObject.getString("versionDes");
 						String versionCode = jsonObject
 								.getString("versionCode");
-						mDownloadUrl = jsonObject
-								.getString("downloadUrl");
+						mDownloadUrl = jsonObject.getString("downloadUrl");
 
 						Log.i(TAG, versionName);
 						Log.i(TAG, mVersionDes);

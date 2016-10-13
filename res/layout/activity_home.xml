@@ -27,6 +27,14 @@
         android:text="我爱你！亲爱的姑娘！见到你并不慌张！爱爱爱爱爱爱爱爱！"
         android:textColor="#000" />
     
+    <LinearLayout
+        android:orientation="horizontal"
+    android:id="@+id/ll_banner"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal">
+	</LinearLayout>
+    
 	<!-- 
 	android:numColumns="3" 指定列的数量
 	android:verticalSpacing="10dp" 指定内部条目竖直方向上的间距为10dp

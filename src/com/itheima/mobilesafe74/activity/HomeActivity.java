@@ -1,5 +1,7 @@
 package com.itheima.mobilesafe74.activity;
 
+import net.youmi.android.normal.banner.BannerManager;
+import net.youmi.android.normal.banner.BannerViewListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -15,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.itheima.mobilesafe74.R;
@@ -34,6 +37,32 @@ public class HomeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 
+		// 获取广告条
+		View bannerView = BannerManager.getInstance(this)
+		    .getBannerView(new BannerViewListener() {
+				
+				@Override
+				public void onSwitchBanner() {
+					
+				}
+				
+				@Override
+				public void onRequestSuccess() {
+					
+				}
+				
+				@Override
+				public void onRequestFailed() {
+					
+				}
+			});
+
+		// 获取要嵌入广告条的布局
+		LinearLayout bannerLayout = (LinearLayout) findViewById(R.id.ll_banner);
+
+		// 将广告条加入到布局中
+		bannerLayout.addView(bannerView);
+		
 		// 初始化UI
 		initUI();
 		// 初始化数据
